@@ -14,6 +14,10 @@ Guns基于SpringBoot,致力于做更简洁的后台管理系统,完美整合spri
 - 4、很多总结的文档都来自[abel533的GiHub](https://github.com/abel533/guns)的README.md.为了方便自己复习就拿来主义了。
 - 5、note里面是自己的学习过程，菜鸟写的，不是大佬写的。内容都是大佬的。
 
+## 目录
+- 1、SpringBoot第一站，分析了启动类。还有各种自动配置的源码[点这里](https://github.com/guoxiaoxu/guo-projects/blob/master/guns-admin/note/README1.md)
+- 2、
+
 ## 修改说明
 
 本项目对 Guns 的改动为：
