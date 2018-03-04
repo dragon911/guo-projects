@@ -1,4 +1,4 @@
-### common.exception 异常定义
+### common.exception、annotation、node、page
 
 1、首先来看所有业务异常的枚举类，看异常大概就能知道这个系统主要完成那些业务逻辑。
 
@@ -61,7 +61,7 @@ public enum BizExceptionEnum {
     private int friendlyCode;
     private String friendlyMsg;
     private String urlPath;
-    //Setter,Getter,Constractor略
+    //Setter,Getter,Constructor略
     BizExceptionEnum(int code, String message) {
         this.friendlyCode = code;
         this.friendlyMsg = message;
@@ -470,6 +470,23 @@ public class MenuNode implements Comparable {
         return menuNodes;
     }
 ```
+### zTree简单使用
+获取所有的选择节点、获取子节点
+```java
+// 通过id号来获取这个树
+var treeObj2 = $.fn.zTree.getZTreeObj("treeDemo");
+// 获取所有已经选择了的节点，获得一个node列表
+var nodes2 = treeObj2.getCheckedNodes(true);
+// 如果是叶子节点就把id拿出来
+var idlist = [];
+$.each(nodes2, function (i, item) {
+    if (!item.isParent) {
+        //alert(item.id + ","  + item.name);
+        idlist.push(item.id);
+    }
+});
+console.log(idlist);
+```
 
 6、接下来，我们看看[pagehelper](https://github.com/pagehelper/Mybatis-PageHelper),Mybatis通用分页插件这个插件也是本项目大佬写的。如果非要自己封装也可以，但是你用过的话就不会在自己封装了。主要是PageInfo类。
 
@@ -509,4 +526,17 @@ public class PageInfoBT<T> {
   //Setter、Getter略
 }
 
+```
+### pagehelper简单使用
+(1)1、查出第一页的数据，每页5条：
+
+```java
+ PageHelper.offsetPage(0, 5);
+```
+
+(2)、获取总数：
+```java
+PageInfo pageInfo = new PageInfo<>(cs);
+System.out.println("总数："+pageInfo.getTotal());
+System.out.println(pageInfo);
 ```
