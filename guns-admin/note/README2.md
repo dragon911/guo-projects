@@ -183,9 +183,6 @@ public class InvalidKaptchaException extends RuntimeException {
 ```java
 /**
  * 权限注解，用于检查权限 规定访问权限
- *
- * @Author guo
- * @Date 2018-03-04 12:15.
  */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)   //运行时有效
@@ -196,13 +193,320 @@ public @interface Permission {
 -------------------------------------------------------
 /**
  * 多数据源标识
-
  */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
 public @interface DataSource {
 }
+---------------------------------------------------------
+/**
+ * 标记需要做业务日志的方法
+ */
+@Inherited
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
+public @interface BussinessLog {
 
+    /**
+     * 业务的名称,例如:"修改菜单"
+     */
+    String value() default "";
+
+    /**
+     * 被修改的实体的唯一标识,例如:菜单实体的唯一标识为"id"
+     */
+    String key() default "id";
+
+    /**
+     * 字典(用于查找key的中文名称和字段的中文名称)
+     */
+    String dict() default "SystemDict";
+}
+
+
+
+```
+
+5、先来看Node类的定义吧，
+
+[ZTree](http://www.treejs.cn/v3/main.php#_zTreeInfo)  is an advanced jQuery 'tree plug-in'. The performance is excellent, it is easy to configurw (with a full set of options), and has many advanced features (that usually only come with paid software).
+
+zTree is open source and uses the MIT license.
+
+- Supports JSON data.
+- Supports both static and asynchronous (Ajax) data loading.
+- Supports multiple instances of zTree in one page.
+- zTree3.0 can use lazy loading for large data, it can easily load tens of thousands of nodes in seconds even in the IE6 browser.
+- ...
+
+The most important is the official document to the very full(**English is very important, important and important.**)
+
+ZTreeNode定义：
+```java
+/**
+ * jquery ztree 插件的节点
+ */
+public class ZTreeNode {
+    /**
+     * 节点id
+     */
+    private Integer id;
+    /**
+     * 父节点id
+     */
+    private Integer pId;
+    /**
+     * 节点名称
+     */
+    private String name;
+    /**
+     * 是否打开节点
+     */
+    private Boolean open;
+    /**
+     * 是否被选中
+     */
+    private Boolean checked;
+    //Setter、Getter、Constructor、toString忽略
+}
+```
+MenuNode实现了Compareable接口，重写了compareTo()方法[完整代码在这](https://gist.github.com/guoxiaoxu/5bcb375eb30bdd47c18d12641a87804e)
+
+```java
+
+@Override
+public int compareTo(Object o) {
+    MenuNode menuNode = (MenuNode) o;
+    Integer num = menuNode.getNum();
+    if (num == null) {
+        num = 0;
+    }
+    return this.num.compareTo(num);
+}
+```
+```java
+/**
+ *
+ * 菜单的节点
+ */
+public class MenuNode implements Comparable {
+    /**
+     * 节点id
+     */
+    private Integer id;
+    /**
+     * 父节点
+     */
+    private Integer parentId;
+    /**
+     * 节点名称
+     */
+    private String name;
+    /**
+     * 按钮级别
+     */
+    private Integer levels;
+    /**
+     * 按钮级别
+     */
+    private Integer ismenu;
+    /**
+     * 按钮的排序
+     */
+    private Integer num;
+    /**
+     * 节点的url
+     */
+    private String url;
+    /**
+     * 节点图标
+     */
+    private String icon;
+    /**
+     * 子节点的集合
+     */
+    private List<MenuNode> children;
+    /**
+     * 查询子节点时候的临时集合
+     */
+    private List<MenuNode> linkedList = new ArrayList<MenuNode>();
+}
+```
+
+为了方便以后查看，方法单独提出来。
+```java
+    /**
+     * 构建整个菜单树
+     */
+    public void buildNodeTree(List<MenuNode> nodeList) {
+        for (MenuNode treeNode : nodeList) {
+            List<MenuNode> linkedList = treeNode.findChildNodes(nodeList, treeNode.getId());
+            if (linkedList.size() > 0) {
+                treeNode.setChildren(linkedList);
+            }
+        }
+    }
+    /**
+     * 查询子节点的集合
+     */
+    public List<MenuNode> findChildNodes(List<MenuNode> nodeList, Integer parentId) {
+        if (nodeList == null && parentId == null)
+            return null;
+        for (Iterator<MenuNode> iterator = nodeList.iterator(); iterator.hasNext(); ) {
+            MenuNode node = (MenuNode) iterator.next();
+            // 根据传入的某个父节点ID,遍历该父节点的所有子节点
+            if (node.getParentId() != 0 && parentId.equals(node.getParentId())) {
+                recursionFn(nodeList, node, parentId);
+            }
+        }
+        return linkedList;
+    }
+--------------------------------------------------------------------------------
+    /**
+     * 遍历一个节点的子节点
+     */
+    public void recursionFn(List<MenuNode> nodeList, MenuNode node, Integer pId) {
+        List<MenuNode> childList = getChildList(nodeList, node);// 得到子节点列表
+        if (childList.size() > 0) {// 判断是否有子节点
+            if (node.getParentId().equals(pId)) {
+                linkedList.add(node);
+            }
+            Iterator<MenuNode> it = childList.iterator();
+            while (it.hasNext()) {
+                MenuNode n = (MenuNode) it.next();
+                recursionFn(nodeList, n, pId);
+            }
+        } else {
+            if (node.getParentId().equals(pId)) {
+                linkedList.add(node);
+            }
+        }
+    }
+
+    /**
+     * 得到子节点列表
+     */
+    private List<MenuNode> getChildList(List<MenuNode> list, MenuNode node) {
+        List<MenuNode> nodeList = new ArrayList<MenuNode>();
+        Iterator<MenuNode> it = list.iterator();
+        while (it.hasNext()) {
+            MenuNode n = (MenuNode) it.next();
+            if (n.getParentId().equals(node.getId())) {
+                nodeList.add(n);
+            }
+        }
+        return nodeList;
+    }
+--------------------------------------------------------------------------------
+    /**
+     * 清除掉按钮级别的资源
+     *
+     * @param nodes
+     * @return
+     */
+    public static List<MenuNode> clearBtn(List<MenuNode> nodes) {
+        ArrayList<MenuNode> noBtns = new ArrayList<MenuNode>();
+        for (MenuNode node : nodes) {
+            if(node.getIsmenu() == IsMenu.YES.getCode()){
+                noBtns.add(node);
+            }
+        }
+        return noBtns;
+    }
+
+    /**
+     * 清除所有二级菜单
+     *
+     * @param nodes
+     * @return
+     */
+    public static List<MenuNode> clearLevelTwo(List<MenuNode> nodes) {
+        ArrayList<MenuNode> results = new ArrayList<MenuNode>();
+        for (MenuNode node : nodes) {
+            Integer levels = node.getLevels();
+            if (levels.equals(1)) {
+                results.add(node);
+            }
+        }
+        return results;
+    }
+--------------------------------------------------------------------------------
+    /**
+     * 构建菜单列表
+     */
+    public static List<MenuNode> buildTitle(List<MenuNode> nodes) {
+
+        List<MenuNode> clearBtn = clearBtn(nodes);
+
+        new MenuNode().buildNodeTree(clearBtn);
+
+        List<MenuNode> menuNodes = clearLevelTwo(clearBtn);
+
+        //对菜单排序
+        Collections.sort(menuNodes);
+
+        //对菜单的子菜单进行排序
+        for (MenuNode menuNode : menuNodes) {
+            if (menuNode.getChildren() != null && menuNode.getChildren().size() > 0) {
+                Collections.sort(menuNode.getChildren());
+            }
+        }
+
+        //如果关闭了接口文档,则不显示接口文档菜单
+        GunsProperties gunsProperties = SpringContextHolder.getBean(GunsProperties.class);
+        if (!gunsProperties.getSwaggerOpen()) {
+            List<MenuNode> menuNodesCopy = new ArrayList<>();
+            for (MenuNode menuNode : menuNodes) {
+                if (Const.API_MENU_NAME.equals(menuNode.getName())) {
+                    continue;
+                } else {
+                    menuNodesCopy.add(menuNode);
+                }
+            }
+            menuNodes = menuNodesCopy;
+        }
+
+        return menuNodes;
+    }
+```
+
+6、接下来，我们看看[pagehelper](https://github.com/pagehelper/Mybatis-PageHelper),Mybatis通用分页插件这个插件也是本项目大佬写的。如果非要自己封装也可以，但是你用过的话就不会在自己封装了。主要是PageInfo类。
+
+```java
+package com.guo.guns.common.page;
+
+import com.github.pagehelper.Page;
+
+import java.util.List;
+
+/**
+ * 分页结果的封装(for Bootstrap Table)
+ *
+ * @Author guo
+ * @Date 2018-03-04 13:47
+ */
+public class PageInfoBT<T> {
+
+    /**
+     *  结果集
+     */
+    private List<T> rows;
+
+    /**
+     * 总数
+     */
+    private long total;
+
+    public PageInfoBT(List<T> page) {
+        this.rows = page;
+        if (page instanceof Page) {
+            this.total = ((Page) page).getTotal();
+        } else {
+            this.total = page.size();
+        }
+    }
+  //Setter、Getter略
+}
 
 ```
