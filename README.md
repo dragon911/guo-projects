@@ -13,12 +13,14 @@ Guns基于SpringBoot,致力于做更简洁的后台管理系统,完美整合spri
 - 3、目前只是一个后台模块，希望自己技能增强到一定时，可以把[stylefeng](https://gitee.com/naan1993) 的 [Guns]融合进来。
 - 4、很多总结的文档都来自[abel533的GiHub](https://github.com/abel533/guns)的README.md.为了方便自己复习就拿来主义了。
 - 5、note里面是自己的学习过程，菜鸟写的，不是大佬写的。内容都是大佬的。
+- 6、只为记录，方便自己以后复习。有什么不对的还请指出来。
 
 ## 目录
 - 1、SpringBoot第一站：分析了启动类。还有各种自动配置的源码[点这里](https://github.com/guoxiaoxu/guo-projects/blob/master/guns-admin/note/README1.md)
 - 2、SpringBoot第二站：定义了异常、注解、Node节点、Page[点这里](https://github.com/guoxiaoxu/guo-projects/blob/master/guns-admin/note/README2.md)
 - 3、SpringBoot第三站：SpringBoot数据源配置、Mybatis配置、日志记录[点这里](https://github.com/guoxiaoxu/guo-projects/blob/master/guns-admin/note/README3.md)
 - 4、SpringBoot第四站：SpringBoot缓存配置、全局异常处理[点这里](https://github.com/guoxiaoxu/guo-projects/blob/master/guns-admin/note/README4.md)
+- 5、SpringBoot第四站：SpringBoot Shiro权限管理，Spring Session、XssFilter[点这里](https://github.com/guoxiaoxu/guo-projects/blob/master/guns-admin/note/README4.md)
 
 
 ## 修改说明
