@@ -1,5 +1,7 @@
 package com.guo.guns.common.exception;
 
+import com.guo.guns.core.support.StrKit;
+
 /**
  * Created by guo on 3/4/2018.
  * 工具类初始化
@@ -22,5 +24,8 @@ public class ToolBoxException extends RuntimeException {
     }
     public ToolBoxException(String messageTemplate, Object...params) {
         super(StrKit.format(messageTemplate,params));
+    }
+    public ToolBoxException(Throwable throwable, String messageTemplate, Object... params) {
+        super(StrKit.format(messageTemplate, params), throwable);
     }
 }

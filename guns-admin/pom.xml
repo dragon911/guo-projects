@@ -6,9 +6,9 @@
 	<groupId>com.guo</groupId>
 	<artifactId>guns</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
-	<name>gunss</name>
+	<name>guns</name>
 	<description>guns 的spring boot版本</description>
 
     <parent>
