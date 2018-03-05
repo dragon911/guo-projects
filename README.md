@@ -21,6 +21,7 @@ Guns基于SpringBoot,致力于做更简洁的后台管理系统,完美整合spri
 - 3、SpringBoot第三站：SpringBoot数据源配置、Mybatis配置、日志记录[点这里](https://github.com/guoxiaoxu/guo-projects/blob/master/guns-admin/note/README3.md)
 - 4、SpringBoot第四站：SpringBoot缓存配置、全局异常处理[点这里](https://github.com/guoxiaoxu/guo-projects/blob/master/guns-admin/note/README4.md)
 - 5、SpringBoot第四站：SpringBoot Shiro权限管理，Spring Session、XssFilter[点这里](https://github.com/guoxiaoxu/guo-projects/blob/master/guns-admin/note/README4.md)
+- 结束，收获蛮大的。gogogo。再次感谢大佬们的付出。
 
 
 ## 修改说明
